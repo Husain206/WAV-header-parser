@@ -69,7 +69,7 @@ static bool expected_id(const char got[4], const char expect[4]){
   return strncmp(got, expect, 4) == 0;
 }
 
-static bool parse_wav_header(std::istream &in, WavHeader& wav){
+bool parse_wav_header(std::istream &in, WavHeader& wav){
   char *chunk_id = wav.chunk_id;
   if(!in.read(chunk_id, 4) || !expected_id(chunk_id, "RIFF")){
     cerr << "not a riff file\n";
@@ -158,27 +158,9 @@ static bool parse_wav_header(std::istream &in, WavHeader& wav){
   return true;
 } 
 
-
-
-int main(int argc, char* argv[]) {
-
-  if (argc != 2) {
-    cerr << "usage: wav <file.wav>\n";
-    return 1;
-  }
-  
-  const std::string filename = argv[1];
-  std::ifstream file(filename, std::ios::binary);
-  if (!file.is_open()) {
-    std::cerr << "\033[31mError:\033[0m Could not open file '" << filename << "'\n";
-    return 1;
-  }
-
-  WavHeader wav{};
-
-  if(!parse_wav_header(file, wav)) return 1;
-
-  cout << "\n\n";
+void print_wav(const WavHeader& wav){
+    cout << "\n\n";
+  cout << " =========================================\n";
   // cout << "*=======**************=======* \n";
   cout << " ******** WAV header ******** \n";
   // cout << "*=======**************=======* \n";
@@ -187,7 +169,7 @@ int main(int argc, char* argv[]) {
   cout << " chunk ID                   :   " << wav.chunk_id            << "\t\n";
   cout << " chunk size                 :   " << wav.chunck_size         << "\t\n";
   cout << " format                     :   " << wav.format              << "\t\n";
-  cout << "  - fmt sub-chunk                    \n";
+  cout << " fmt sub-chunk                      \n";
   cout << "     fmt ID                 :   " << wav.fmt_id              << "\t\n";
   cout << "     fmt size               :   " << wav.fmt_size            << "\t\n";
   // cout << "     audio format           :   " << wav.audio_format        << "\t\n";
@@ -197,21 +179,35 @@ int main(int argc, char* argv[]) {
   cout << "     byte rate              :   " << wav.byte_rate           << "\t\n";
   cout << "     block align            :   " << wav.block_align         << "\t\n";
   cout << "     bits per-sample        :   " << wav.bits_per_sample     << "\t\n";
-  cout << " - list sub-chunk                     \n";  
-  cout << "    list ID                 :   " << wav.list_id             << "\t\n";
-  cout << "    list size               :   " << wav.list_size           << "\t\n";
-  cout << "     - sub-chunk type       :   " << wav.list_subChunk_type  << "\t\n";
+  cout << " list sub-chunk                       \n";  
+  cout << "     list ID                 :   " << wav.list_id             << "\t\n";
+  cout << "     list size               :   " << wav.list_size           << "\t\n";
+  cout << "     sub-chunk type       :   " << wav.list_subChunk_type  << "\t\n";
   cout << "         info id            :   " << wav.info_id             << "\t\n";
   cout << "         info size          :   " << wav.info_size           << "\t\n";
-  cout << " - data sub-chunk                    \n";  
-  cout << "    data ID                 :   " << wav.data_id             << "\t\n";
-  cout << "    data size               :   " << wav.data_size           << "\t\n";
+  cout << " data sub-chunk                      \n";  
+  cout << "     data ID                 :   " << wav.data_id             << "\t\n";
+  cout << "     data size               :   " << wav.data_size           << "\t\n";
 
-
-  // cout << "=========================================\n";
-  
-  return 0;
 }
+
+
+ifstream read_bin(int argc, char **argv){
+  if (argc != 2) {
+    cerr << "usage: wav <file.wav>\n";
+    return ifstream{};
+  }
+  
+  const std::string filename = argv[1];
+  std::ifstream file(filename, std::ios::binary);
+  if (!file.is_open()) {
+    std::cerr << "\033[31mError:\033[0m Could not open file '" << filename << "'\n";
+    return ifstream{};
+  }
+  return file;
+}
+
+
 
 
 

@@ -1,4 +1,6 @@
+#include <cmath>
 #include <cstdint>
+#include <fstream>
 #include <istream>
 
 
@@ -93,7 +95,7 @@ struct WavHeader {
 };
 
 
-static bool parse_wav_header(std::istream &in, WavHeader& wav);
+bool parse_wav_header(std::istream &in, WavHeader& wav);
 
 uint32_t read_u32_le(std::istream& in);
 uint32_t read_u32_be(std::istream& in);
@@ -104,3 +106,6 @@ uint16_t read_u16_be(std::istream& in);
 static void skip_bytes(std::istream& in, uint32_t n);
 static void skip_chunk_payload(std::istream& in, uint32_t size);
 static bool expected_id(const char got[4], const char expect[4]);
+
+void print_wav(const WavHeader& wav);
+std::ifstream read_bin(int argc, char **argv);

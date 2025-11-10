@@ -1,6 +1,6 @@
 CXX       := g++
 CXXFLAGS  := -Wall -Wextra -Wpedantic -ftime-report
-SRC       := $(wildcard src/*.cpp)
+SRC       := $(wildcard main.cpp src/*.cpp)
 OBJ       := $(SRC:.cpp=.o)
 TARGET    := wav
 
